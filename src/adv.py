@@ -23,7 +23,7 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 
-# Link rooms together
+# Link rooms together blueprint for set up
 
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
@@ -34,12 +34,28 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+#list of items in the game
+branch=Item(name = "branch", description= 'cus you gotta protect your self some how...')
+sandwich=Item(name = "sandwich", description= 'gives health and is really tasty but, low key who left this here...')
+sword=Item(name = "sword", description= 'idk why you would need this at this time but cool wish it was the master sword though...')
+shield=Item(name = "shield", description= 'ooh snap we going full knight now?')
+necklace=Item(name = "necklace", description= 'This better give me good stats or im going to return it...')
+boots=Item(name = "boots", description= 'papa needs a new pair of shoes or in this case boots...')
+
+#items in the rooms
+room['outside'].addItems(sandwich)
+room['foyer'].addItems(shield)
+room['overlook'].addItems(sword)
+room['narrow'].addItems(boots)
+room['treasure'].addItems(necklace)
+
+
 #
-# Main
+# Main functionally for the game
 #
 
 # Make a new player object that is currently in the 'outside' room.
-p = Player(name = 'Raymond',current_room = room['outside'],)
+p = Player(name = 'Raymond',current_room = room['outside'],current_item= [branch])
  
 def change_room(direction):
     try:
@@ -59,12 +75,17 @@ def change_room(direction):
 #
 # * Prints the current room name
 while True:
-    print(p.current_room.name)
+    print('(name)',p.name)
+    print('(Location)',p.current_room.name)
+    print('(item(s))',p.current_item.current_item)
     print(p.current_room.description)
+    
     
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
-    answer= input("where do you want to go? n,e,s,w >").lower().strip()
+    answer= input("where do you want to go? n,e,s,w or hit q to quit.>").lower().strip()
+    print("\n")
+    # answer = answer[0]
     
     if answer in ['n','e','s','w'] :
         change_room(answer)
