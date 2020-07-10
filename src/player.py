@@ -2,7 +2,13 @@
 # currently.
 #build of Player
 class Player:
-    def __init__(self, name, current_room,current_item):
+    def __init__(self, name, current_room):
         self.name = name
         self.current_room = current_room
-        self.current_item = current_item
+        self.current_items = list()
+#add items
+    def addItem(self, item):
+        self.current_items.append(item)
+#yeet items
+    def deleteItems(self, item):
+        self.current_items.remove(item)

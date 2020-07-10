@@ -35,19 +35,21 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 #list of items in the game
-branch=Item(name = "branch", description= 'cus you gotta protect your self some how...')
+
+branch=Item(name = "branch", description= 'cus you gotta protect yourself somehow...')
 sandwich=Item(name = "sandwich", description= 'gives health and is really tasty but, low key who left this here...')
 sword=Item(name = "sword", description= 'idk why you would need this at this time but cool wish it was the master sword though...')
-shield=Item(name = "shield", description= 'ooh snap we going full knight now?')
+shield=Item(name = "shield", description= 'ooh snap its like a real mmo now..')
 necklace=Item(name = "necklace", description= 'This better give me good stats or im going to return it...')
 boots=Item(name = "boots", description= 'papa needs a new pair of shoes or in this case boots...')
 
 #items in the rooms
 room['outside'].addItems(sandwich)
+room['outside'].addItems(necklace)
 room['foyer'].addItems(shield)
 room['overlook'].addItems(sword)
 room['narrow'].addItems(boots)
-room['treasure'].addItems(necklace)
+room['treasure'].addItems(sandwich)
 
 
 #
@@ -55,7 +57,8 @@ room['treasure'].addItems(necklace)
 #
 
 # Make a new player object that is currently in the 'outside' room.
-p = Player(name = 'Raymond',current_room = room['outside'],current_item= [branch])
+p = Player(name = 'Raymond',current_room = room['outside'])
+p.addItem(branch)
  
 def change_room(direction):
     try:
@@ -68,27 +71,55 @@ def change_room(direction):
         elif direction == "w":
             p.current_room = p.current_room.w_to
     except:
-        print("try again")
-    
+        print("oof... I can't go this way, let me try that again...")
+def pick_up(item_name):
+    for item in p.current_room.items :
+        if item_name == item.name:
+            p.addItem(item)
+            p.current_room.deleteItems(item)
+            return
 
+def drop_down(item_name):
+    for item in p.current_items:
+        if item_name == item.name:
+            p.current_room.addItems(item)
+            p.deleteItems(item)
+            return            
 # Write a loop that:
 #
 # * Prints the current room name
 while True:
-    print('(name)',p.name)
+    print("\n")
+    print('(Name)',p.name)
     print('(Location)',p.current_room.name)
-    print('(item(s))',p.current_item.current_item)
     print(p.current_room.description)
+    print('(Items in the area)',p.current_room.items)
     
     
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
-    answer= input("where do you want to go? n,e,s,w or hit q to quit.>").lower().strip()
     print("\n")
-    # answer = answer[0]
+    answer= input("where do you want to go? n,e,s,w --- Did you want to pickup an item? get <name> --- Did you want to drop an item? drop <name> --- Show inventory? i --- To quit q>").lower().strip()
+    print("\n")
     
     if answer in ['n','e','s','w'] :
         change_room(answer)
+    if answer[0:3] in ['get']:
+       try :
+        pick_up(answer.split()[1])
+       except:
+        print('I didn\'t understand...') 
+
+    if answer[0:4] in ['drop']:
+        try:
+         drop_down(answer.split()[1]) 
+        except:
+         print('I didn\'t understand...')   
+
+    if answer in ['i']:
+        print('----inventory----')
+        for item in p.current_items:
+            print('(Item)',item.name,'---',item.description)
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
 #
